@@ -23,105 +23,101 @@ export default function Home() {
   useGSAP(
     () => {
       // Wait for fonts to be loaded
-      const timer = setTimeout(() => {
-        // FOUC prevention: ensure hero and hero image are hidden initially
-        gsap.set(".hero", { autoAlpha: 1 });
-        gsap.set(heroImage.current, { opacity: 0, scale: 1.1 });
 
-        // For h2/h3
-        const H2s = gsap.utils.toArray("h2, h3");
-        H2s.forEach((el) => {
-          const split = SplitText.create(el as Element, {
-            type: "lines",
-            linesClass: "lineH2",
-            mask: "lines",
-          });
+      // FOUC prevention: ensure hero and hero image are hidden initially
+      gsap.set(".hero", { autoAlpha: 1 });
+      gsap.set(heroImage.current, { opacity: 0, scale: 1.1 });
 
-          gsap.from(split.lines, {
-            yPercent: 100,
-            stagger: 0.08,
-            duration: 1,
-            ease: "power4.out",
-            autoAlpha: 0,
-            scrollTrigger: {
-              trigger: el as Element,
-              start: "top 80%",
-            },
-          });
+      // For h2/h3
+      const H2s = gsap.utils.toArray("h2, h3");
+      H2s.forEach((el) => {
+        const split = SplitText.create(el as Element, {
+          type: "lines",
+          linesClass: "lineH2",
+          mask: "lines",
         });
 
-        // Line animation
-        gsap.utils.toArray(".line").forEach((el) => {
-          gsap.from(el as Element, {
-            width: "0%",
-            duration: 1.5,
-            ease: "power1.out",
-            scrollTrigger: {
-              trigger: el as Element,
-              start: "top 80%",
-            },
-          });
-        });
-
-        // Hero H1 SplitText
-        const splitH1 = new SplitText(".hero-h1", {
-          type: "chars",
-          linesClass: "lineParent",
-          charsClass: "lineChild",
-          mask: "chars",
-        });
-
-        const tl = gsap.timeline();
-        tl.to(heroImage.current, {
-          opacity: 1,
-          scale: 1.1,
+        gsap.from(split.lines, {
+          yPercent: 100,
+          stagger: 0.08,
           duration: 1,
+          ease: "power4.out",
+          autoAlpha: 0,
+          scrollTrigger: {
+            trigger: el as Element,
+            start: "top 80%",
+          },
+        });
+      });
+
+      // Line animation
+      gsap.utils.toArray(".line").forEach((el) => {
+        gsap.from(el as Element, {
+          width: "0%",
+          duration: 1.5,
           ease: "power1.out",
-          delay: 0.5,
+          scrollTrigger: {
+            trigger: el as Element,
+            start: "top 80%",
+          },
+        });
+      });
+
+      // Hero H1 SplitText
+      const splitH1 = new SplitText(".hero-h1", {
+        type: "chars",
+        linesClass: "lineParent",
+        charsClass: "lineChild",
+        mask: "chars",
+      });
+
+      const tl = gsap.timeline();
+      tl.to(heroImage.current, {
+        opacity: 1,
+        scale: 1.1,
+        duration: 1,
+        ease: "power1.out",
+        delay: 0.5,
+      })
+        .from(splitH1.chars, {
+          yPercent: 100,
+          stagger: 0.03,
+          duration: 1.2,
+          ease: "power1.out",
         })
-          .from(splitH1.chars, {
+        .from(
+          ".hero-h3",
+          {
             yPercent: 100,
-            stagger: 0.03,
-            duration: 1.2,
+            autoAlpha: 0, // fade in
+            stagger: 0.1,
+            duration: 0.8,
             ease: "power1.out",
-          })
-          .from(
-            ".hero-h3",
-            {
-              yPercent: 100,
-              autoAlpha: 0, // fade in
-              stagger: 0.1,
-              duration: 0.8,
-              ease: "power1.out",
-            },
-            "-=0.6" // overlap with h1 animation if desired
-          );
-
-        gsap.to(heroImage.current, {
-          scale: 1,
-          // Remove opacity from scroll effect to prevent image from fading out on scroll
-          scrollTrigger: {
-            trigger: heroImage.current,
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
           },
-        });
+          "-=0.6" // overlap with h1 animation if desired
+        );
 
-        gsap.to(".hero-img-overlay", {
-          opacity: 0.8, // adjust for desired darkness
-          ease: "none",
-          scrollTrigger: {
-            trigger: heroImage.current,
-            start: "top top",
-            end: "bottom top",
-            scrub: 0.3,
-          },
-        });
-      }, 50);
-      return () => {
-        clearTimeout(timer);
-      };
+      gsap.to(heroImage.current, {
+        scale: 1,
+        // Remove opacity from scroll effect to prevent image from fading out on scroll
+        scrollTrigger: {
+          trigger: heroImage.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      gsap.to(".hero-img-overlay", {
+        opacity: 0.8, // adjust for desired darkness
+        ease: "none",
+        scrollTrigger: {
+          trigger: heroImage.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.3,
+        },
+      });
     },
     {
       scope: container, // Force re-run on navigation

@@ -15,48 +15,41 @@ export default function Layout({ project }: { project: Project }) {
   useGSAP(
     () => {
       gsap.set(".imagediv", { scale: 1.4 });
-      const timer = setTimeout(() => {
-        const images = gsap.utils.toArray(".imagediv");
-        images.forEach((el) => {
-          gsap.to(el as Element, {
-            autoAlpha: 1,
-            duration: 3,
-            scale: 1,
-            ease: "power4.out",
-            scrollTrigger: {
-              trigger: el as Element,
-              start: "top 60%",
-            },
-          });
-        });
 
-        gsap.from(".line", {
-          width: "0%",
+      const images = gsap.utils.toArray(".imagediv");
+      images.forEach((el) => {
+        gsap.to(el as Element, {
+          autoAlpha: 1,
           duration: 3,
+          scale: 1,
           ease: "power4.out",
           scrollTrigger: {
-            trigger: ".line",
-            start: "top 80%",
+            trigger: el as Element,
+            start: "top 60%",
           },
         });
+      });
 
-        gsap.from(".line--detail", {
-          width: "0%",
-          duration: 3,
-          ease: "power4.out",
-          stagger: 0.15,
-          scrollTrigger: {
-            trigger: ".detail-lines",
-            start: "top 85%",
-          },
-        });
-      }, 50);
+      gsap.from(".line", {
+        width: "0%",
+        duration: 3,
+        ease: "power4.out",
+        scrollTrigger: {
+          trigger: ".line",
+          start: "top 80%",
+        },
+      });
 
-      // Cleanup function
-      return () => {
-        clearTimeout(timer);
-        // Manual cleanup in addition to useGSAP's automatic cleanup
-      };
+      gsap.from(".line--detail", {
+        width: "0%",
+        duration: 3,
+        ease: "power4.out",
+        stagger: 0.15,
+        scrollTrigger: {
+          trigger: ".detail-lines",
+          start: "top 85%",
+        },
+      });
     },
     {
       scope: container, // Force re-run on navigation
